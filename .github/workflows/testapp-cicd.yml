@@ -29,6 +29,12 @@ jobs:
        uses: azure/login@v1
        with:
           creds: '{"clientId":"${{ secrets.CLIENT_ID }}","clientSecret":"${{ secrets.CLIENT_SECRET }}","subscriptionId":"${{ secrets.SUBSCRIPTION_ID }}","tenantId":"${{ secrets.TENANT_ID }}"}'
+
+     - name: 'Deploying image to App Service'
+       uses: azure/webapps-deploy@v2
+       with:
+        app-name: 'testapprwdev'
+        images: ${{ secrets.ACR_SERVER }}/testapp:${{ github.sha }}
          
 
 

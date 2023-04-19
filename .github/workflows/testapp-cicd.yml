@@ -19,6 +19,10 @@ jobs:
          login-server: ${{ secrets.ACR_SERVER }}
          username: ${{ secrets.ACR_USERNAME }}
          password: ${{ secrets.ACR_PASSWORD }}
+     - run: |
+         docker build . -t ${{ secrets.ACR_SERVER }}/testapp:${{ github.sha }}
+         docker push ${{ secrets.ACR_SERVER }}/testapp:${{ github.sha }}     
+
 
 
 

@@ -15,12 +15,18 @@ jobs:
      steps:
      - name: 'Checkout GitHub Action' 
        uses: actions/checkout@v3
+     - name: 'Get Azure Container Registry secrets from keyvault'
+       uses: Azure/get-keyvault-secrets@v1
+       with:
+         keyvault: kv-appimplementation-dev
+         secrets: 'containerregistrypassword, containerregistryusername'
+       id: acrSecret
      - name: 'Login to Azure Container Registry'
        uses: azure/docker-login@v1
        with:
          login-server: ${{ secrets.ACR_SERVER }}
-         username: ${{ secrets.ACR_USERNAME }}
-         password: ${{ secrets.ACR_PASSWORD }}
+         username: ${{ steps.acrSecret.outputs.containerregistryusername }}
+         password: ${{ steps.acrSecret.outputs.containerregistrypassword }}
      - name: 'Image build and push to ACR'
        run: |
          docker build . -t ${{ secrets.ACR_SERVER }}/testapp:${{ github.sha }}

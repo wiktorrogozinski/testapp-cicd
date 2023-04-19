@@ -15,6 +15,10 @@ jobs:
      steps:
      - name: 'Checkout GitHub Action' 
        uses: actions/checkout@v3
+     - name: 'Az CLI login'
+       uses: azure/login@v1
+       with:
+          creds: '{"clientId":"${{ secrets.CLIENT_ID }}","clientSecret":"${{ secrets.CLIENT_SECRET }}","subscriptionId":"${{ secrets.SUBSCRIPTION_ID }}","tenantId":"${{ secrets.TENANT_ID }}"}'
      - name: 'Get Azure Container Registry secrets from keyvault'
        uses: Azure/get-keyvault-secrets@v1
        with:
@@ -31,12 +35,6 @@ jobs:
        run: |
          docker build . -t ${{ secrets.ACR_SERVER }}/testapp:${{ github.sha }}
          docker push ${{ secrets.ACR_SERVER }}/testapp:${{ github.sha }}
-
-     - name: 'Az CLI login'
-       uses: azure/login@v1
-       with:
-          creds: '{"clientId":"${{ secrets.CLIENT_ID }}","clientSecret":"${{ secrets.CLIENT_SECRET }}","subscriptionId":"${{ secrets.SUBSCRIPTION_ID }}","tenantId":"${{ secrets.TENANT_ID }}"}'
-
      - name: 'Deploying image to App Service'
        uses: azure/webapps-deploy@v2
        with:

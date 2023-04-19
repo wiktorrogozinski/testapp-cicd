@@ -9,10 +9,17 @@ on:
     branches:
       - 'release/dev'
 jobs:
-   test:
+  image-build:
      runs-on: ubuntu-22.04
+     environment: dev
      steps:
-       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+     - uses: actions/checkout@v3
+     - uses: azure/docker-login@v1
+       with:
+         login-server: ${{ secrets.ACR_SERVER }}
+         username: ${{ secrets.ACR_USERNAME }}
+         password: ${{ secrets.ACR_PASSWORD }}
+
 
 
 

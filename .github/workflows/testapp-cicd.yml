@@ -9,22 +9,32 @@ on:
     branches:
       - 'release/dev'
 jobs:
-  image-build:
+  testapp-deployment:
      runs-on: ubuntu-22.04
      environment: dev
      steps:
-     - uses: actions/checkout@v3
-     - uses: azure/docker-login@v1
+     - name: 'Checkout GitHub Action' 
+       uses: actions/checkout@v3
+     - name: 'Login to Azure Container Registry and image build'
+       uses: azure/docker-login@v1
        with:
          login-server: ${{ secrets.ACR_SERVER }}
          username: ${{ secrets.ACR_USERNAME }}
          password: ${{ secrets.ACR_PASSWORD }}
      - run: |
          docker build . -t ${{ secrets.ACR_SERVER }}/testapp:${{ github.sha }}
-         docker push ${{ secrets.ACR_SERVER }}/testapp:${{ github.sha }}     
+         docker push ${{ secrets.ACR_SERVER }}/testapp:${{ github.sha }}
+
+     - name: 'Az CLI login'
+       uses: azure/login@v1
+       with:
+          creds: '{"clientId":"${{ secrets.CLIENT_ID }}","clientSecret":"${{ secrets.CLIENT_SECRET }}","subscriptionId":"${{ secrets.SUBSCRIPTION_ID }}","tenantId":"${{ secrets.TENANT_ID }}"}'
+         
 
 
 
 
 
    
+ 
+     

@@ -15,13 +15,14 @@ jobs:
      steps:
      - name: 'Checkout GitHub Action' 
        uses: actions/checkout@v3
-     - name: 'Login to Azure Container Registry and image build'
+     - name: 'Login to Azure Container Registry'
        uses: azure/docker-login@v1
        with:
          login-server: ${{ secrets.ACR_SERVER }}
          username: ${{ secrets.ACR_USERNAME }}
          password: ${{ secrets.ACR_PASSWORD }}
-     - run: |
+     - name: 'Image build and push to ACR'
+       run: |
          docker build . -t ${{ secrets.ACR_SERVER }}/testapp:${{ github.sha }}
          docker push ${{ secrets.ACR_SERVER }}/testapp:${{ github.sha }}
 

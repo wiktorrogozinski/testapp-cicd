@@ -1,5 +1,5 @@
 name: testapp-cicd
-run-name: ${{ github.actor }} triggered pipeline.
+run-name: ${{ github.actor }} triggered pipeline with {{ github.sha }} activity.
 
 on: 
   push:
